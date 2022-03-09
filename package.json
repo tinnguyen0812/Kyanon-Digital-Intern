@@ -1,0 +1,23 @@
+{
+  "name": "kyanon-digital-intern",
+  "version": "1.0.0",
+  "description": "",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/tinnguyen0812/Kyanon-Digital-Intern.git"
+  },
+  "author": "",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/tinnguyen0812/Kyanon-Digital-Intern/issues"
+  },
+  "homepage": "https://github.com/tinnguyen0812/Kyanon-Digital-Intern#readme",
+  "devDependencies": {
+    "prompt": "^1.2.2",
+    "request": "^2.88.2"
+  }
+}
