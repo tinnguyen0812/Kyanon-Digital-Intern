@@ -14,7 +14,7 @@ prompt.get(['path'],function(err,res){
         if(err){
             console.error(err)
         }
-        fs.open(path,'r+',function(err,fd){
+        fs.open(path,'w+',function(err,fd){
             if(err){
                 return console.error(err)
             }

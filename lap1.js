@@ -20,7 +20,7 @@ prompt.get(['path','content'],function(err,res){
                 console.log(buf.slice(0,bytes).toString());
             }
         });
-        fs.writeFile(res.path,res.content,{flag:'a+'},function(err){
+        fs.writeFile(res.path,res.content,{flag:'w+'},function(err){
             if(err){
                 console.error(err)
             }
