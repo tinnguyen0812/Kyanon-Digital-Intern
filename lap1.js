@@ -1,47 +1,35 @@
 var fs = require("fs");
 const prompt = require('prompt')
-var buf = new Buffer(1024);
+
+
+function readData(path){
+    return new Promise(function(resolve,reject){
+        fs.readFile(path,(err,data)=>{
+            if(err){
+                reject(err)
+            }
+            resolve(data.toString())
+        })
+    })
+}
+function writeData(path,content){
+    return new Promise(function(resolve,reject){
+        fs.writeFile(path,content,{flag:'w'},function(err){
+            if(err){
+                reject(err)
+            }
+            resolve('write data success');
+        })
+    })
+}
 
 prompt.start()
 prompt.get(['path','content'],function(err,res){
     if(err){
         console.error(err)
     }
-    fs.open(res.path,'r+',function(err,fd){
-        if(err){
-            return console.error(err)
-        }
-        fs.read(fd,buf,0,buf.length,0,function(err,bytes){
-            if(err){
-                console.error(err)
-            }
-            if(bytes>0){
-                console.log("content before write:")
-                console.log(buf.slice(0,bytes).toString());
-            }
-        });
-        fs.writeFile(res.path,res.content,{flag:'w+'},function(err){
-            if(err){
-                console.error(err)
-            }
-            console.log('write data success');
-
-            fs.read(fd,buf,0,buf.length,0,function(err,bytes){
-                if(err){
-                    console.error(err)
-                }
-                if(bytes>0){
-                    console.log("Content after write:")
-                    console.log(buf.slice(0,bytes).toString());
-                }
-                fs.close(fd, function(err){
-                    if (err){
-                       console.log(err);
-                    } 
-                 });
-            });
-
-        })
-
-    });
+    writeData(res.path,res.content)
+    .then(function(res){console.log(res)})
+    readData(res.path)
+    .then(function(res){console.log(res)})
 })
