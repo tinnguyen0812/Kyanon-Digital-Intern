@@ -1,4 +1,5 @@
 const express = require('express');
+const {authentication} = require('../middlewares/authentication')
 const categoryController = require('../controllers/category')
 const router = express.Router();
 router.get('/',categoryController.List)

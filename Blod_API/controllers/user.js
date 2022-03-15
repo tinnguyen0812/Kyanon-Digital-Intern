@@ -1,6 +1,7 @@
 const user = require('../models/user.model')
-const bcrypt = require('bcrypt')
+const permission = require('../models/permission.model')
 const jwt = require('jsonwebtoken')
+const _ = require('lodash')
 class userController{
     async register(req,res){
         try{
@@ -30,7 +31,18 @@ class userController{
                 if(body.password!=data[0].passwordHash){
                     return res.status(400).send({mgs:'password incorrect'})
                 }else{
-                    const token = jwt.sign({id:data[0].id},"secret")
+                    let permiss={};
+                    const user_permiss = await permission.getPermissionByUser(data[0].id);
+                    _.forEach(user_permiss,(value)=>{
+                        const resource = value.resource;
+                        const action = value.action;
+                        permiss[resource]?permiss[resource].push(action): permiss[resource]=[action]
+                    });
+                    let payload ={
+                        user_id:data[0].id,
+                        permission:permiss
+                    }
+                    const token = jwt.sign(payload,"secret")
                     return res.status(200).send({token:token})
                 }
             

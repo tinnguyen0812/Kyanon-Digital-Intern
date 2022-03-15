@@ -1,5 +1,6 @@
 const express = require('express');
 const postController = require('../controllers/post')
+const {authentication} = require('../middlewares/authentication')
 const router = express.Router();
 router.get('/',postController.List)
 router.post('/',postController.Create)
