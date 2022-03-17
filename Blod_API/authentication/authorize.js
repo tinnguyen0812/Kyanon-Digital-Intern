@@ -4,20 +4,22 @@ const redis = require('redis')
 const redisClient = redis.createClient(6379);
 const result = require('../helpers/response')
 let permission;
+redisClient.connect();
 const checkToken = async (req,res,next) => {
-    var token = ''
+   let token;
     if (req.headers.authorization && req.headers.authorization.startsWith('Bearer')) {
          token = req.headers.authorization.split(" ")[token_value_index]
+    } else {
+        return result.NOT_FOUND(res,'Pls insert token');
     }
-    redisClient.connect();
-    const tokenRedis = await redisClient.get('token');
-    if(token === tokenRedis){
+    const verified = jwt.verify(token,process.env.SECRETKEY);
+    permission = verified.permission;
+    const tokenRedis = await redisClient.get(verified.user_id);
+    if (token === tokenRedis) {
         try {
-            const verified = jwt.verify(token,process.env.SECRETKEY);
-            permission = verified.permission;
             next();
         } catch (err){
-            result.FORBIDEN(res,'Invalid token')
+            result.BAD_REQUEST(res,'server error')
         }
     }else{
         return result.FORBIDEN(res,'Invalid token')

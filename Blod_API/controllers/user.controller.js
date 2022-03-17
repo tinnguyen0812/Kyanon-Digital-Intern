@@ -5,7 +5,7 @@ const _ = require('lodash')
 const result = require('../helpers/response')
 const redis = require('redis')
 const redisClient = redis.createClient(6379);
-
+redisClient.connect();
 class UserController{
     async register(req,res){
         try{
@@ -47,14 +47,20 @@ class UserController{
                 permission : permiss
             }
             const token = jwt.sign( payload,process.env.SECRETKEY)
-            redisClient.connect();
-            redisClient.set('token', token )
+            redisClient.set(data[0].id, token )
             return result.OK(res,token,'login success')
         }           
         catch (err) {
             console.log(err)
             return result.BAD_REQUEST(res,'server error')
         }
+    }
+    async logout(req,res){
+        const token = req.headers.authorization.split(" ")[process.env.token_value_index]
+        const verified = jwt.verify(token,process.env.SECRETKEY);
+        const id = verified.user_id;
+        redisClient.del(id)
+        result.OK(res,'','logout success')
     }
 }
 module.exports = new UserController;
