@@ -38,6 +38,7 @@ const user = {
       return err;
     }
   },
+
   async deleteUserById(id) {
     const user = await db.query("delete from user where id=?", [id]);
     if (!user) {

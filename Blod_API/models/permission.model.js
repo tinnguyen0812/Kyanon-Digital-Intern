@@ -21,13 +21,13 @@ const post = {
       return error;
     }
   },
-  async addPermission(object) {
+  async addPermission(userId, permissionId) {
     try {
       const result = await query.query(
         "insert into user_permission(user_id,permission_id) values(?,?)",
-        [object.user_id, object.permiss_id],
+        [userId, permissionId],
       );
-      return result;
+      return result[0];
     } catch (error) {
       console.log(error);
       return error;
@@ -51,7 +51,7 @@ const post = {
       .catch((err) => {
         throw err;
       });
-    return post;
+    return post[0];
   },
 };
 module.exports = post;
