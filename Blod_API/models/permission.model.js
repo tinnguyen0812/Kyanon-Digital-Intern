@@ -11,7 +11,7 @@ const post ={
     },
     async getPermissionByUser(id){
         try{
-            const permission =await query.query("select resource,action from permission join user_permission on permission_id=permission.id  where user_id=?",[id])
+            const permission = await query.query("select resource,action from permission join user_permission on permission_id=permission.id  where user_id=?",[id])
             return permission[0];
         }catch(error){
             console.log(error)
@@ -20,7 +20,7 @@ const post ={
     },
     async addPermission(object){
         try{
-            const result= await query.query("insert into user_permission(user_id,permission_id) values(?,?)",[object.user_id,object.permiss_id])
+            const result = await query.query("insert into user_permission(user_id,permission_id) values(?,?)",[object.user_id,object.permiss_id])
             return result;
         }catch(error){
             console.log(error)

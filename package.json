@@ -19,19 +19,29 @@
   "homepage": "https://github.com/tinnguyen0812/Kyanon-Digital-Intern#readme",
   "devDependencies": {
     "bcrypt": "^5.0.1",
+    "eslint": "^8.11.0",
+    "eslint-config-airbnb-base": "^15.0.0",
+    "eslint-config-node": "^4.1.0",
+    "eslint-config-prettier": "^8.5.0",
+    "eslint-plugin-node": "^11.1.0",
+    "eslint-plugin-prettier": "^4.0.0",
     "express-jwt": "^6.1.1",
     "express-session": "^1.17.2",
     "jsonwebtoken": "^8.5.1",
     "lodash": "^4.17.21",
     "passport": "^0.5.2",
     "passport-local": "^1.0.0",
+    "prettier": "^2.6.0",
     "prompt": "^1.2.2",
     "request": "^2.88.2"
   },
   "dependencies": {
     "body-parser": "^1.19.2",
+    "dotenv": "^16.0.0",
     "express": "^4.17.3",
+    "http-status-codes": "^2.2.0",
     "mysql2": "^2.3.3",
-    "nodemon": "^2.0.15"
+    "nodemon": "^2.0.15",
+    "redis": "^4.0.4"
   }
 }

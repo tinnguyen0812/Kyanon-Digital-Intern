@@ -18,7 +18,7 @@ const user ={
         }
     },
     async getUserById(id){
-        const user =await db.query("select * from user where id=?",[id])
+        const user = await db.query("select * from user where id=?",[id])
         if(!user){
             return null
         }
@@ -26,7 +26,7 @@ const user ={
     },
     async addUser(user){
         try{
-            const result= await db.query("insert into user(email,passwordHash,registeredAt) values(?,?,?)",[user.email,user.password,user.registeredAt])
+            const result = await db.query("insert into user(email,passwordHash,registeredAt) values(?,?,?)",[user.email,user.password,user.registeredAt])
             return result;
         }catch(err){
             return err;

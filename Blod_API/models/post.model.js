@@ -11,7 +11,7 @@ const post ={
     },
     async getPostById(id){
         try{
-            const post =await query.query("select * from post where id=?",[id])
+            const post = await query.query("select * from post where id=?",[id])
             return post[0];
         }catch(error){
             console.log(error)
@@ -20,7 +20,7 @@ const post ={
     },
     async addPost(post){
         try{
-            const result= await query.query("insert into post(authorId,title,slug,createdAt) values(?,?,?,?)",[post.authorId,post.title,post.slug,post.createdAt])
+            const result = await query.query("insert into post(authorId,title,slug,createdAt) values(?,?,?,?)",[post.authorId,post.title,post.slug,post.createdAt])
             return result;
         }catch(error){
             console.log(error)

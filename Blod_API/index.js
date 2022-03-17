@@ -1,5 +1,6 @@
 const express = require('express')
 var db = require('./config/connect')
+require('dotenv').config()
 // create our express app
 const app = express()
 // middleware
@@ -10,6 +11,6 @@ app.use(express.json());
 const routes = require('./routes/index')
 routes(app);
 //start server
-app.listen(3000, ()=>{
-    console.log("listeniing at port:3000")
+app.listen(process.env.PORT || 3000, ()=>{
+    console.log(`listeniing at port:${process.env.PORT}`)
 }) 
