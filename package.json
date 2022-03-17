@@ -18,6 +18,7 @@
   },
   "homepage": "https://github.com/tinnguyen0812/Kyanon-Digital-Intern#readme",
   "devDependencies": {
+    "@hapi/joi": "^17.1.1",
     "bcrypt": "^5.0.1",
     "eslint": "^8.11.0",
     "eslint-config-airbnb-base": "^15.0.0",

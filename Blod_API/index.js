@@ -8,7 +8,7 @@ app.use(express.urlencoded({ extended: false}))
 app.use(express.json());
 // route
 
-const routes = require('./routes/index')
+const routes = require('./routes/index.route')
 routes(app);
 //start server
 app.listen(process.env.PORT || 3000, ()=>{
