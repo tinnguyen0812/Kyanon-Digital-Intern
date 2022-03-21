@@ -3,14 +3,14 @@ const permission = require("../models/permission.model");
 const jwt = require("jsonwebtoken");
 const _ = require("lodash");
 const result = require("../helpers/response");
-const { loginValidate, registerValidate } = require("../helpers/validation");
+const { loginValidate, regisValidate } = require("../helpers/validation");
 const { StatusCodes } = require("http-status-codes");
 const redis = require("redis");
 const redisClient = redis.createClient(6379);
 redisClient.connect();
 class UserController {
   async register(req, res) {
-    const { error } = registerValidate(req.body);
+    const { error } = regisValidate(req.body);
     if (error) return result.BAD_REQUEST(res, error.details[0].message);
     try {
       const body = req.body;
@@ -28,8 +28,8 @@ class UserController {
   }
 
   async login(req, res) {
-    // const { error } = loginValidate(req.body);
-    // if (error) return result.BAD_REQUEST(res, error.details[0].message);
+    const { error } = loginValidate(req.body);
+    if (error) return result.BAD_REQUEST(res, error.details[0].message);
     try {
       const body = req.body;
       const data = await user.getUserByEmail(body.email);
@@ -52,9 +52,7 @@ class UserController {
         user_id: data[0].id,
         permission: permiss,
       };
-      const token = jwt.sign(payload, process.env.SECRETKEY, {
-        expiresIn: "1h",
-      });
+      const token = jwt.sign(payload, process.env.SECRETKEY);
       redisClient.set(data[0].id, token);
       return result.OK(res, token, "login success");
     } catch (err) {

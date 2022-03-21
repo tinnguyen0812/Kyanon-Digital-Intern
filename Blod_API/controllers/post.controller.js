@@ -19,7 +19,8 @@ class PostController {
 
   async Create(req, res) {
     const { error } = postValidate(req.body);
-    if (error) return result.BAD_REQUEST(res, error.details[0].message);
+    console.log("err", postValidate(req.body));
+    if (error) return result.BAD_REQUEST(res, error[0].message);
     try {
       const data = await post.addPost(req.body);
       if (!data.sqlMessage) {

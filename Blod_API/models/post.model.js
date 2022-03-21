@@ -22,7 +22,7 @@ const post = {
     try {
       const result = await query.query(
         "insert into post(authorId,title,slug,createdAt) values(?,?,?,?)",
-        [post.authorId, post.title, post.slug, post.createdAt],
+        [post.authorId, post.title, post.slug, "NOW()"],
       );
       return result;
     } catch (error) {
