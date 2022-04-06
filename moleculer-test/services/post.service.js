@@ -3,6 +3,7 @@
 const DbService = require("moleculer-db");
 const SqlAdapter = require("moleculer-db-adapter-sequelize");
 const Sequelize = require("sequelize");
+const user = require("../services/user.service");
 const post = require("../models/post.model");
 
 /**
@@ -16,7 +17,7 @@ module.exports = {
 	/**
 	 * Mixins
 	 */
-	mixins: [DbService],
+	mixins: [DbService, user],
 	adapter: new SqlAdapter("blog", "root", "180300", {
 		host: "localhost",
 		dialect: "mysql",
@@ -28,9 +29,22 @@ module.exports = {
 	settings: {
 		// Available fields in the responses
 		// Validator for the `create` & `insert` actions.
+		routes: [
+			{
+				// First thing
+				authorization: true,
+				path: "/post",
+				authentication: true,
+			},
+		],
 		entityValidator: {
-			authorId: "string|max:20",
+			authorId: "number|max:20",
 			slug: "string|max:100",
+		},
+		populates: {
+			authorId: {
+				fiedls: "authorId",
+			},
 		},
 	},
 
@@ -38,13 +52,7 @@ module.exports = {
 	 * Action Hooks
 	 */
 	hooks: {
-		before: {
-			/**
-			 * Register a before hook for the `create` action.
-			 * It sets a default value for the quantity field.
-			 *
-			 */
-		},
+		before: {},
 	},
 
 	/**

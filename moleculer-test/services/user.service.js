@@ -5,7 +5,12 @@ const SqlAdapter = require("moleculer-db-adapter-sequelize");
 const Sequelize = require("sequelize");
 const user = require("../models/user.model");
 const { QueryTypes } = require("@sequelize/core");
-
+const permission = require("../services/permission.service");
+const jwt = require("jsonwebtoken");
+const _ = require("lodash");
+const redis = require("redis");
+const redisClient = redis.createClient(6379);
+redisClient.connect();
 /**
  * @typedef {import('moleculer').Context} Context Moleculer's Context
  */
@@ -13,11 +18,8 @@ const { QueryTypes } = require("@sequelize/core");
 module.exports = {
 	name: "user",
 
-	mixins: [DbService],
-	adapter: new SqlAdapter("blog", "root", "180300", {
-		host: "localhost",
-		dialect: "mysql",
-	}),
+	mixins: [DbService, permission],
+	adapter: new SqlAdapter("mysql://root:180300@localhost:3306/blog"),
 	model: user,
 	/**
 	 * Settings
@@ -51,11 +53,34 @@ module.exports = {
 		login: {
 			rest: "POST login",
 			async handler(ctx, res) {
-				const email = ctx.params.email;
-				console.log("email", email);
-				const data = await this.adapter.find({ query: { email } });
-				console.log(data);
-				return "test post service";
+				const data = await this.adapter.find({
+					//attributes: ["id", "email", "passwordHash"],
+					query: {
+						email: ctx.params.email,
+						passwordHash: ctx.params.password,
+					},
+				});
+				if (data.length === 0) {
+					ctx.meta.$statusCode = 404;
+					return "Wrong email or password";
+				}
+				let permiss = {};
+				const role = await this.getRole(data[0].dataValues.id);
+				_.forEach(role, (value) => {
+					const resource = value.resource;
+					const action = value.action;
+					permiss[resource]
+						? permiss[resource].push(action)
+						: (permiss[resource] = [action]);
+				});
+				let payload = {
+					user_id: data[0].dataValues.id,
+					permission: permiss,
+				};
+				const token = jwt.sign(payload, process.env.JWT_TOKEN_SECRET);
+				redisClient.set(data[0].dataValues.id, token);
+				ctx.meta.$statusCode = 200;
+				return { token: token };
 			},
 		},
 	},
@@ -68,8 +93,4 @@ module.exports = {
 	/**
 	 * Fired after database connection establishing.
 	 */
-	async afterConnected() {
-		console.log("connected service prodcut");
-		// await this.adapter.collection.createIndex({ name: 1 });
-	},
 };

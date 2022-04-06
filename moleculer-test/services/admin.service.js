@@ -14,13 +14,13 @@ const middlewares = require("../middlewares/my.middlewares");
  */
 
 module.exports = {
-	name: "api",
+	name: "admin",
 	mixins: [ApiGateway, middlewares],
 
 	// More info about settings: https://moleculer.services/docs/0.14/moleculer-web.html
 	settings: {
 		// Exposed port
-		port: process.env.PORT || 3000,
+		port: process.env.PORT || 3500,
 
 		// Exposed IP
 		ip: "0.0.0.0",
@@ -30,32 +30,56 @@ module.exports = {
 
 		routes: [
 			{
-				path: "/api",
+				path: `admin/`,
 
-				whitelist: ["user.*", "post.*"],
-				mergeParams: true,
-
-				// Enable authentication. Implement the logic into `authenticate` method. More info: https://moleculer.services/docs/0.14/moleculer-web.html#Authentication
-				authentication: true,
-				// Enable authorization. Implement the logic into `authorize` method. More info: https://moleculer.services/docs/0.14/moleculer-web.html#Authorization
-				authorization: true,
-				// The auto-alias feature allows you to declare your route alias directly in your services.
-				// The gateway will dynamically build the full routes from service schema.
-				autoAliases: true,
-				aliases: {},
-			},
-			{
-				path: "/auth",
-
-				whitelist: ["user.login"],
+				whitelist: ["permission.*"],
 
 				// Route-level Express middlewares. More info: https://moleculer.services/docs/0.14/moleculer-web.html#Middlewares
 				use: [],
 
 				// Enable/disable parameter merging method. More info: https://moleculer.services/docs/0.14/moleculer-web.html#Disable-merging
 				mergeParams: true,
+
+				// Enable authentication. Implement the logic into `authenticate` method. More info: https://moleculer.services/docs/0.14/moleculer-web.html#Authentication
 				authentication: false,
+
+				// Enable authorization. Implement the logic into `authorize` method. More info: https://moleculer.services/docs/0.14/moleculer-web.html#Authorization
 				authorization: false,
+
+				// The auto-alias feature allows you to declare your route alias directly in your services.
+				// The gateway will dynamically build the full routes from service schema.
+				autoAliases: true,
+
+				aliases: {},
+
+				/**
+				 * Before call hook. You can check the request.
+				 * @param {Context} ctx
+				 * @param {Object} route
+				 * @param {IncomingRequest} req
+				 * @param {ServerResponse} res
+				 * @param {Object} data
+				 *
+				onBeforeCall(ctx, route, req, res) {
+					// Set request headers to context meta
+					ctx.meta.userAgent = req.headers["user-agent"];
+				}, */
+
+				/**
+				 * After call hook. You can modify the data.
+				 * @param {Context} ctx
+				 * @param {Object} route
+				 * @param {IncomingRequest} req
+				 * @param {ServerResponse} res
+				 * @param {Object} data
+				onAfterCall(ctx, route, req, res, data) {
+					// Async function which return with Promise
+					return doSomething(ctx, res, data);
+				}, */
+
+				// Calling options. More info: https://moleculer.services/docs/0.14/moleculer-web.html#Calling-options
+				callingOptions: {},
+
 				bodyParsers: {
 					json: {
 						strict: false,
@@ -66,6 +90,12 @@ module.exports = {
 						limit: "1MB",
 					},
 				},
+
+				// Mapping policy setting. More info: https://moleculer.services/docs/0.14/moleculer-web.html#Mapping-policy
+				mappingPolicy: "all", // Available values: "all", "restrict"
+
+				// Enable/disable logging
+				logging: true,
 			},
 		],
 
