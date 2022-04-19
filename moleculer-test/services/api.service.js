@@ -4,7 +4,6 @@ const ApiGateway = require("moleculer-web");
 const redis = require("redis");
 const redisClient = redis.createClient(6379);
 const jwt = require("jsonwebtoken");
-redisClient.connect();
 const E = require("moleculer-web").Errors;
 const middlewares = require("../middlewares/my.middlewares");
 /**
@@ -110,7 +109,7 @@ module.exports = {
 					token,
 					process.env.JWT_TOKEN_SECRET
 				);
-
+				redisClient.connect();
 				const tokenRedis = await redisClient.get(verified.user_id);
 				// Check the token. Tip: call a service which verify the token. E.g. `accounts.resolveToken`
 				if (token == tokenRedis) {

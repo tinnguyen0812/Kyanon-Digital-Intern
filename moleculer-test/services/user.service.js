@@ -10,7 +10,7 @@ const jwt = require("jsonwebtoken");
 const _ = require("lodash");
 const redis = require("redis");
 const redisClient = redis.createClient(6379);
-redisClient.connect();
+
 /**
  * @typedef {import('moleculer').Context} Context Moleculer's Context
  */
@@ -78,6 +78,7 @@ module.exports = {
 					permission: permiss,
 				};
 				const token = jwt.sign(payload, process.env.JWT_TOKEN_SECRET);
+				await redisClient.connect();
 				redisClient.set(data[0].dataValues.id, token);
 				ctx.meta.$statusCode = 200;
 				return { token: token };
