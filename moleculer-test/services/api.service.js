@@ -105,10 +105,12 @@ module.exports = {
 				req.headers.authorization.startsWith("Bearer")
 			) {
 				const token = req.headers.authorization.split(" ")[1];
+				console.log(process.env.JWT_TOKEN_SECRET);
 				const verified = await jwt.verify(
 					token,
 					process.env.JWT_TOKEN_SECRET
 				);
+
 				const tokenRedis = await redisClient.get(verified.user_id);
 				// Check the token. Tip: call a service which verify the token. E.g. `accounts.resolveToken`
 				if (token == tokenRedis) {
