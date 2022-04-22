@@ -30,7 +30,7 @@ const checkToken = async (req, res, next) => {
 };
 const checkPermission = (req, res, next) => {
   const action = req.method;
-  const resource = req.originalUrl.substring(1);
+  const resource = req.originalUrl.substring(1, 5);
   if (permission[resource]) {
     const arrAct = permission[resource];
     if (arrAct.includes(action)) {

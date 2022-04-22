@@ -21,8 +21,8 @@ const post = {
   async addPost(post) {
     try {
       const result = await query.query(
-        "insert into post(authorId,title,slug,createdAt) values(?,?,?,?)",
-        [post.authorId, post.title, post.slug, "NOW()"],
+        "insert into post(authorId,title,slug) values(?,?,?)",
+        [post.authorId, post.title, post.slug],
       );
       return result;
     } catch (error) {

@@ -1,13 +1,25 @@
 const post = require("../models/post.model");
 const result = require("../helpers/response");
 const { postValidate } = require("../helpers/validation");
+const esService = require("./es.controller");
+const { forEach } = require("lodash");
 class PostController {
+  async Search(req, res) {
+    const searchText = req.query.text;
+    const index = req.originalUrl.substring(1, 5);
+    //await esService.delIndex(index);
+    const es = await esService.search(index, searchText.trim());
+    if (es.hits.hits.length === 0) {
+      result.NOT_FOUND(res, "empty");
+    }
+    result.OK(res, es, "");
+  }
   async List(req, res) {
     const data = await post.getAllPost();
     if (data.length === 0) {
       result.NOT_FOUND(res, "list is empty");
     }
-    result.OK(res, data, "");
+    result.OK(res, es.hits.hits, "");
   }
 
   async Detail(req, res) {
@@ -19,11 +31,17 @@ class PostController {
 
   async Create(req, res) {
     const { error } = postValidate(req.body);
-    console.log("err", postValidate(req.body));
     if (error) return result.BAD_REQUEST(res, error[0].message);
+    const index = req.originalUrl.substring(1, 5);
     try {
+      let i = 0;
+      for (; i < 500; i++) {
+        req.body.authorID = i + 1;
+        await esService.index(index, req.body);
+      }
+
       const data = await post.addPost(req.body);
-      if (!data.sqlMessage) {
+      if (req.body) {
         result.OK(res, data, "CREATED");
       } else {
         result.BAD_REQUEST(res, data.sqlMessage);

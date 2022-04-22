@@ -7,7 +7,7 @@ const { checkPermission, checkToken } = require("../authentication/authorize");
 
 function route(app) {
   app.use("/category", checkToken, checkPermission, categoryRouter);
-  app.use("/post", checkToken, checkPermission, postRouter);
+  app.use("/post", postRouter);
   app.use("/user", userRouter);
 }
 
