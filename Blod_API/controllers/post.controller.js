@@ -7,7 +7,7 @@ class PostController {
   async Search(req, res) {
     const searchText = req.query.text;
     const index = req.originalUrl.substring(1, 5);
-    //await esService.delIndex(index);
+    //console.log(await esService.delIndex(index));
     const es = await esService.search(index, searchText.trim());
     if (es.hits.hits.length === 0) {
       result.NOT_FOUND(res, "empty");
@@ -35,11 +35,11 @@ class PostController {
     const index = req.originalUrl.substring(1, 5);
     try {
       let i = 0;
-      for (; i < 500; i++) {
-        req.body.authorID = i + 1;
-        await esService.index(index, req.body);
-      }
-
+      // for (; i < 500; i++) {
+      //   req.body.authorID = i + 1;
+      //   await esService.index(index, req.body);
+      // }
+      await esService.index(index, req.body);
       const data = await post.addPost(req.body);
       if (req.body) {
         result.OK(res, data, "CREATED");

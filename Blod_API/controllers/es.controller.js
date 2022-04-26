@@ -19,12 +19,17 @@ async function search(index, body) {
     body: {
       from: 0,
       size: 100,
-      sort: [{ authorID: "asc" }],
+      //sort: [{ authorID: "asc" }],
       query: {
-        query_string: {
-          //default_field: "title",
-          query: `*${body}*`,
-          fields: ["title", "slug", "authorID"],
+        // query_string: {
+        //   //default_field: "title",
+        //   query: `*${body}*`,
+        //   fields: ["title", "slug", "authorID"],
+        // },
+        wildcard: {
+          title: {
+            value: `*${body}*`,
+          },
         },
       },
       _source: ["title", "slug", "authorID"],
