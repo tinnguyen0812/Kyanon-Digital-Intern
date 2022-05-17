@@ -1,7 +1,7 @@
 const category = require("../models/category.model");
 const result = require("../helpers/response");
 const { categoryValidate } = require("../helpers/validation");
-const {index,search}= require("./es.controller")
+const esService = require("./es.controller");
 class CategoryController {
   async List(req, res) {
     try {
@@ -30,8 +30,9 @@ class CategoryController {
     const { error } = categoryValidate(req.body);
     if (error) return result.BAD_REQUEST(res, error.details[0].message);
     try {
+      const index = req.originalUrl.substring(1, 5);
+      await esService.index(index, req.body);
       const data = await category.addcategory(req.body);
-      index('post',req.body)
       if (data[0].affectedRows === 0) {
         result.BAD_REQUEST(res, "create unsuccess");
       }

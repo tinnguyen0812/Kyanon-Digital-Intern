@@ -41,11 +41,10 @@ class PostController {
       // }
       await esService.index(index, req.body);
       const data = await post.addPost(req.body);
-      if (req.body) {
-        result.OK(res, data, "CREATED");
-      } else {
-        result.BAD_REQUEST(res, data.sqlMessage);
+      if (data[0].affectedRows === 0) {
+        result.BAD_REQUEST(res, "create unsuccess");
       }
+      result.OK(res, req.body, "CREATED");
     } catch (error) {
       console.log(error);
       result.BAD_REQUEST(res, error);
